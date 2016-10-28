@@ -1,20 +1,38 @@
+
 #!/bin/bash
+
+IFS=$','
 
 ## Created by Steve Langewicz
 ## Mid Term Exam 10-27-2016
 
+##See CreateExam.sh for creation of EXAM.sh and MidTerm Directory using VI
+
+declare -i MAX_ARRAY=2 #3 arrays
+declare -i index
 declare -A homeDir
 declare -i repeatQ=1
 declare -i TRUE=1
 declare -A userPrompt
+declare -a FILLEDARRAY[0]='umask 110'
+declare -a FILLEDARRAY[1]="alias cls='clear'"
+declare -a FILLEDARRAY[2]='set -o noclobber'
+declare -a readArray
+
 main() {
-       askHomeDir
-       lsLDesc
-       pathNames
-       createFile
-       clobFinder
-       moveFile
-       exit 0;
+        askHomeDir
+        lsLDesc
+        pathNames
+        createFile
+        fillFile
+#       readFile        #Ran out of time to get working properly
+        sendToProfile
+        clobFinder
+        moveFile
+        clear
+        echo -e "\n\n\n\n\n\n\n\n\n\n Complete!"
+        sleep 3
+        exit 0;
 }
 
 askHomeDir() {
@@ -59,34 +77,58 @@ my home directory folder (slangewicz) would look like:\n\n cd ./MidTerm.\n\n\n"
 }
 
 createFile() {
+        clear
         echo -e "\n\nCreating file DeLeTe.Me in home directory..\n\n"
         cd /home/slangewicz/
         touch DeLeTe.Me
+        sleep 3
 }
 
-#fillFile() {
+fillFile() {
+        echo -e "\n\n\n\nFilling DeLeTe.Me File.."
+        cd /home/slangewicz
+        for (( i=0; i <= $MAX_ARRAY; i++ )){
+                echo "${FILLEDARRAY[i]}," >> DeLeTe.Me
+                echo ${FILLEDARRAY[i]}
+        sleep 2
+        }
+}
 
-#readFile() {
+#readFile() {           #Ran out of time to get working properly
+#       declare -i lineNumber=0
+#       while read readArray
+#       do
+#               readArray[lineNumber]= ${readArray[lineNumber]}
+#               echo -n ${readArray[lineNumber]}
+#               ((lineNumber++))
+#       done < DeLeTe.Me
+#
+#}
+
+sendToProfile(){
+        echo -e "\n\n\n\n Sending info to .bash_profile.."
+        cd /home/slangewicz
+        for (( i=0; i <= $MAX_ARRAY; i++ )){
+                echo -e  "${FILLEDARRAY[i]}\n" >> .bash_profile
+        }
+        sleep 2
+}
 
 clobFinder() {
-        echo -e "Searching for all files with 'clob'.. in the home directory"
+        clear
+        echo -e "\n\n\nSearching for all files with 'clob'.. in the home directory\n\n"
         grep -r "clob" /home/slangewicz
         sleep 2
 }
 
 moveFile() {
-        echo "Moving EXAM.sh to Home Dir; Deleting DeLeTe.Me from Home dir."
+        clear
+        echo -e  "Moving EXAM.sh to Home Dir.\n Deleting DeLeTe.Me from Home dir.\n Deleting MidTermDir"
         cd /home/slangewicz/MidTerm
         mv EXAM.sh /home/slangewicz
         cd /home/slangewicz
         rm DeLeTe.Me
+        rm -r MidTerm
 }
-
-
-
-
-
-
-
 
 main
